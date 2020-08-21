@@ -22,11 +22,11 @@ def UvCoordToWorld(U, V, mesh):
   float2ParamUV = util2.asFloat2Ptr()
 
   for i in range(numFaces):
-  try:
-  mfnMesh.getPointAtUV(i,WSpoint, float2ParamUV, om.MSpace.kWorld)
-  break; #point is in poly
-  except:
-  continue #point not found!
+    try:
+      mfnMesh.getPointAtUV(i,WSpoint, float2ParamUV, om.MSpace.kWorld)
+      break; #point is in poly
+    except:
+      continue #point not found!
 
   return WSpoint
 
