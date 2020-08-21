@@ -1,0 +1,33 @@
+#-*- coding:utf-8 -*-
+### from  https://gist.github.com/Tarachan/9492738290c76c1e48ac030fa0d7bd19
+import maya.cmds as cmds
+import maya.api.OpenMaya as om
+
+def getPointAtUV(U,V):
+    u"""
+    概要:
+        選択したDAGノードのUV値からワールド位置情報を取得。
+        例 : getPointAtUV(0.5,0.5)
+    
+    引数:
+        U (float) : U値。
+        V (float) : V値。
+    
+    戻り値:
+        vector[] : ワールド位置情報。
+                   UV値上にフェースが無い場合はNone。
+    """
+    
+    selList = om.MGlobal.getActiveSelectionList()
+    dagPath = selList.getDagPath(0)
+    #メッシュノードか判定
+    if dagPath.hasFn( om.MFn.kMesh ):
+        mesh  = om.MFnMesh(dagPath)
+        uvset = mesh.getUVSetNames()
+        
+        for i in range(mesh.numPolygons):
+            try:
+                point = mesh.getPointAtUV(i,U,V,space=om.MSpace.kWorld,uvSet=uvset[0],tolerance=0.0)
+                return list(point)[:3]
+            except:
+                pass
